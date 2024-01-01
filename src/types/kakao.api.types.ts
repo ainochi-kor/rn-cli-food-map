@@ -85,3 +85,32 @@ export interface CoordsFromRoadAddress {
   y: string;
   x: string;
 }
+
+export interface GetCoordsFromKeywordResponse {
+  meta: {
+    same_name: {
+      region: any[];
+      keyword: string;
+      selected_region: string;
+    };
+    pageable_count: number;
+    total_count: number;
+    is_end: boolean;
+  };
+  documents: CoordsFromKeywordDocument[];
+}
+
+export interface CoordsFromKeywordDocument {
+  place_name: string;
+  distance: string;
+  place_url: string;
+  category_name: string;
+  address_name: string;
+  road_address_name: string;
+  id: string;
+  phone: string;
+  category_group_code: string;
+  category_group_name: string;
+  x: string;
+  y: string;
+}

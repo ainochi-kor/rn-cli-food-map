@@ -6,6 +6,7 @@ import Geolocation from '@react-native-community/geolocation';
 import {
   getAddressFromCoords,
   getCoordsFromAddress,
+  getCoordsFromKeyword,
 } from '../services/kakao.api';
 import {SingleLineInput} from '../components/SingleLineInput';
 import {RegionProps} from '../types/geo.types';
@@ -40,8 +41,17 @@ const MainScreen: React.FC = () => {
   }, [onChangeLocation]);
 
   const onFindAddress = useCallback(async () => {
-    const addressResult = await getCoordsFromAddress(query);
+    const keywordResult = await getCoordsFromKeyword(query);
+    if (keywordResult) {
+      setCurrentAddress(keywordResult.address);
+      setCurrentRegion({
+        latitude: keywordResult.latitude,
+        longitude: keywordResult.longitude,
+      });
+      return;
+    }
 
+    const addressResult = await getCoordsFromAddress(query);
     if (!addressResult) {
       return console.error('주소를 찾을 수 없습니다.');
     }

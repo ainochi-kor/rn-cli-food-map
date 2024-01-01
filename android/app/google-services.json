@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "296475544846",
+    "project_id": "food-map-59ed1",
+    "storage_bucket": "food-map-59ed1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:296475544846:android:025d2c88850893af101b5f",
+        "android_client_info": {
+          "package_name": "com.foodmap"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAMAYAF3Ph9yGb8Th3ixGuzovJoXzZgr8Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
