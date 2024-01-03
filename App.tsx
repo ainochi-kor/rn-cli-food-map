@@ -8,7 +8,7 @@
 import React from 'react';
 import {SafeAreaView} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
-import RootNavigation from './src/navigation/RootNavigation';
+import {RootNavigation} from './src/navigation/RootNavigation';
 
 function App(): React.JSX.Element {
   return (

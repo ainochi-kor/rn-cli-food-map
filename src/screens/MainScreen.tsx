@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {Text, View} from 'react-native';
+import {Pressable, Text, View} from 'react-native';
 import {Header} from '../components/Header/Header';
 import MapView, {Marker} from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
@@ -10,11 +10,13 @@ import {
 } from '../services/kakao.api';
 import {SingleLineInput} from '../components/SingleLineInput';
 import {RegionProps} from '../types/geo.types';
+import {useRootNavigation} from '../navigation/RootNavigation';
 
 // latitude 37.4994755
 // longitude 127.0352252
 
 const MainScreen: React.FC = () => {
+  const navigation = useRootNavigation<'Main'>();
   const [currentRegion, setCurrentRegion] = useState<RegionProps>({
     latitude: 37.4994755,
     longitude: 127.0352252,
@@ -63,6 +65,23 @@ const MainScreen: React.FC = () => {
     });
   }, [query]);
 
+  const onPressBottomAddress = useCallback(() => {
+    if (!currentAddress) {
+      return;
+    }
+
+    navigation.navigate('Add', {
+      latitude: currentRegion.latitude,
+      longitude: currentRegion.longitude,
+      address: currentAddress,
+    });
+  }, [
+    currentAddress,
+    currentRegion.latitude,
+    currentRegion.longitude,
+    navigation,
+  ]);
+
   useEffect(() => {
     getMyLocation();
   }, [getMyLocation]);
@@ -110,7 +129,8 @@ const MainScreen: React.FC = () => {
             alignItems: 'center',
             justifyContent: 'center',
           }}>
-          <View
+          <Pressable
+            onPress={onPressBottomAddress}
             style={{
               backgroundColor: 'gray',
               paddingHorizontal: 24,
@@ -118,7 +138,7 @@ const MainScreen: React.FC = () => {
               borderRadius: 30,
             }}>
             <Text style={{fontSize: 16, color: 'white'}}>{currentAddress}</Text>
-          </View>
+          </Pressable>
         </View>
       )}
     </View>
