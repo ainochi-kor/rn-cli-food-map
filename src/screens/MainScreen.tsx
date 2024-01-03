@@ -11,6 +11,8 @@ import {
 import {SingleLineInput} from '../components/SingleLineInput';
 import {RegionProps} from '../types/geo.types';
 import {useRootNavigation} from '../navigation/RootNavigation';
+import {Restrant} from '../types/firebase.api.types';
+import {getRestrantList} from '../services/firebase.api';
 
 // latitude 37.4994755
 // longitude 127.0352252
@@ -23,6 +25,8 @@ const MainScreen: React.FC = () => {
   });
   const [currentAddress, setCurrentAddress] = useState<string | null>(null);
   const [query, setQuery] = useState<string>('');
+  const [isMapReady, setIsMapReady] = useState<boolean>(false);
+  const [markerList, setMarkerList] = useState<Restrant[]>([]);
 
   const onChangeLocation = useCallback(
     async ({latitude, longitude}: RegionProps) => {
@@ -82,6 +86,12 @@ const MainScreen: React.FC = () => {
     navigation,
   ]);
 
+  const onMapReady = useCallback(async () => {
+    setIsMapReady(true);
+    const restrantList = await getRestrantList();
+    setMarkerList(restrantList);
+  }, []);
+
   useEffect(() => {
     getMyLocation();
   }, [getMyLocation]);
@@ -99,13 +109,31 @@ const MainScreen: React.FC = () => {
           latitudeDelta: 0.015,
           longitudeDelta: 0.0121,
         }}
-        onLongPress={e => onChangeLocation(e.nativeEvent.coordinate)}>
-        <Marker
-          coordinate={{
-            latitude: currentRegion.latitude,
-            longitude: currentRegion.longitude,
-          }}
-        />
+        onLongPress={e => onChangeLocation(e.nativeEvent.coordinate)}
+        onMapReady={onMapReady}>
+        {isMapReady && (
+          <Marker
+            coordinate={{
+              latitude: currentRegion.latitude,
+              longitude: currentRegion.longitude,
+            }}
+          />
+        )}
+        {isMapReady &&
+          markerList.map(({address, latitude, longitude, title}) => {
+            return (
+              <Marker
+                key={address}
+                title={title}
+                description={address}
+                coordinate={{
+                  latitude,
+                  longitude,
+                }}
+                pinColor="blue"
+              />
+            );
+          })}
       </MapView>
 
       <View style={{position: 'absolute', top: 24, left: 24, right: 24}}>

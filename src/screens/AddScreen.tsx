@@ -4,15 +4,29 @@ import {Header} from '../components/Header/Header';
 import {Typography} from '../components/Typography';
 import {Spacer} from '../components/Spacer';
 import {SingleLineInput} from '../components/SingleLineInput';
-import {useRootRoute} from '../navigation/RootNavigation';
+import {useRootNavigation, useRootRoute} from '../navigation/RootNavigation';
 import MapView, {Marker} from 'react-native-maps';
 import {Button} from '../components/Button';
+import {saveNewRestrant} from '../services/firebase.api';
 
 const AddScreen: React.FC = () => {
+  const navigation = useRootNavigation<'Add'>();
   const routes = useRootRoute<'Add'>();
   const [title, setTitle] = useState<string>('');
-  const onPressBack = useCallback(() => {}, []);
-  const onPressSave = useCallback(() => {}, []);
+  const onPressBack = useCallback(() => {
+    navigation.goBack();
+  }, [navigation]);
+  const onPressSave = useCallback(async () => {
+    if (title === '') {
+      return;
+    }
+
+    await saveNewRestrant({
+      title,
+      ...routes.params,
+    });
+    navigation.goBack();
+  }, [navigation, routes.params, title]);
   return (
     <View style={{flex: 1}}>
       <Header>
@@ -57,8 +71,11 @@ const AddScreen: React.FC = () => {
               paddingVertical: 12,
               alignItems: 'center',
               justifyContent: 'center',
-            }}
-          />
+            }}>
+            <Typography fontSize={16} color="white">
+              저장하기
+            </Typography>
+          </View>
         </Button>
       </View>
     </View>
